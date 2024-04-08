@@ -1,0 +1,50 @@
+{% extends 'main/layout.html' %}
+
+{% block title %}Добавление проекта{% endblock %}
+
+{% block content %}
+
+<div class = "features">
+    <h1>Форма</h1>
+    {% if error %}
+        <div class="alert alert-danger">{{ error }}</div>
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+
+        {% for field in form %}
+            <div class="form-group">
+                {{ field.label_tag }}
+                {{ field }}
+                {{ field.errors }}
+            </div>
+        {% endfor %}
+
+
+        <div id="requirementsFields"></div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const rolesSelect = document.querySelector('#id_roles');
+                const requirementsFields = document.querySelector('#requirementsFields');
+
+                rolesSelect.addEventListener('change', function() {
+                    const selectedRoles = Array.from(rolesSelect.selectedOptions).map(option => option.text);
+
+                    requirementsFields.innerHTML = '';
+                    selectedRoles.forEach(role => {
+                        const textarea = document.createElement('textarea');
+                        textarea.name = `requirements_${role.toLowerCase().replace(/\s/g, '_')}`;
+                        textarea.placeholder = `Requirements for ${role}`;
+                        requirementsFields.appendChild(textarea);
+                    });
+                });
+            });
+        </script>
+
+        <button type="submit" class="btn btn-primary">Create</button>
+    </form>
+{% endblock %}
+</div>

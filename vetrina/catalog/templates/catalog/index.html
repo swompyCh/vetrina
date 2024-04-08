@@ -1,0 +1,29 @@
+{% extends 'main/layout.html' %}
+
+{% block title %}Каталог{% endblock %}
+
+{% block content %}
+    <div class="features">
+        <h1>Каталог</h1>
+
+        {% for project in projects %}
+            <div class="alert alert-warning">
+                <h3>{{ project.title }}</h3>
+                <h3>{{ project.school }}</h3>
+                <h3>{{ project.type }}</h3>
+                <h3>Идёт набор до {{project.start_date}}</h3>
+                <h4>Vacancies:</h4>
+                <ul>
+                    {% for vacancy in project.vacancies.all %}
+                        <li>{{ vacancy.role.title }}</li>
+                    {% endfor %}
+                </ul>
+                <a href="{% url 'catalog-detail' project.ID_project %}" class="btn btn-warning">Подробнее</a>
+            </div>
+        {% endfor %}
+
+        <a href="{% url 'create' %}">
+            <button class="btn btn-info">Добавить проект</button>
+        </a>
+    </div>
+{% endblock %}

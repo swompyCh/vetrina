@@ -1,0 +1,75 @@
+{% extends 'main/layout.html' %}
+
+{% block title %}Редактирование проекта{% endblock %}
+
+{% block content %}
+
+<div class = "features">
+    <h1>Форма</h1>
+    {% if error %}
+        <div class="alert alert-danger">{{ error }}</div>
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+
+        {% for field in form %}
+            <div class="form-group">
+                {{ field.label_tag }}
+                {{ field }}
+                {{ field.errors }}
+            </div>
+        {% endfor %}
+
+        <div id="rolesFields">
+            {% for role_field in form.roles %}
+                <div class="form-group">
+                    {{ role_field.label_tag }}
+                    {{ role_field }}
+                    <div class="requirements-container"></div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const rolesSelect = document.querySelector('#id_roles');
+                const rolesFields = document.querySelector('#rolesFields');
+
+                rolesSelect.addEventListener('change', function() {
+                    const selectedRoles = Array.from(rolesSelect.selectedOptions).map(option => option.text);
+
+                    rolesFields.querySelectorAll('.requirements-container').forEach(container => {
+                        container.innerHTML = '';
+                    });
+
+                    selectedRoles.forEach(role => {
+                        const roleDiv = document.createElement('div');
+                        roleDiv.classList.add('form-group');
+
+                        const roleLabel = document.createElement('label');
+                        roleLabel.textContent = role;
+                        roleDiv.appendChild(roleLabel);
+
+                        const textarea = document.createElement('textarea');
+                        textarea.name = `requirements_${role.toLowerCase().replace(/\s/g, '_')}`;
+                        textarea.placeholder = `Requirements for ${role}`;
+                        roleDiv.appendChild(textarea);
+
+                        const requirementsContainer = document.createElement('div');
+                        requirementsContainer.classList.add('requirements-container');
+                        roleDiv.appendChild(requirementsContainer);
+
+                        rolesFields.appendChild(roleDiv);
+                    });
+                });
+            });
+        </script>
+
+        <button type="submit" class="btn btn-primary">Update</button>
+    </form>
+</div>
+
+
+{% endblock %}

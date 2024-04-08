@@ -1,0 +1,38 @@
+{% extends 'main/layout.html' %}
+
+{% block title %}{{project.title}}{% endblock %}
+
+{% block content %}
+    <div class="features">
+        <h1>{{ project.title }}</h1>
+        <p>Дата создания проекта: {{project.created_date}}</p>
+        <p>Цель проекта: {{project.goal}}</p>
+        <p>Задачи: {{project.tasks}}</p>
+        <p>Приём заявок до: {{project.start_date}}</p>
+        <p>Сроки: {{project.start_date}} - {{project.end_date}}</p>
+        <p>Тип проект: {{project.type}}</p>
+        <p>Статус разработки: {{project.status}}</p>
+        <p>Описание проекта: {{project.description}}</p>
+        <p>Результат проекта: {{project.result}}</p>
+
+
+
+      <h2>Роли</h2>
+      <ul>
+          {% for vacancy in project.vacancies.all %}
+              <li>
+                  Role: {{ vacancy.role.title }}<br>
+                  Requirements: {{ vacancy.requirements.description }}<br>
+          <!--        Acquired Skills: {{ vacancy.acquired_skills.description }}-->
+              </li>
+                  {% empty %}
+              <li>No vacancies found.</li>
+          {% endfor %}
+      </ul>
+
+      <a href="{% url 'catalog-update' project.ID_project %}" class="btn btn-warning">Редактировать</a>
+      <a href="{% url 'catalog-delete' project.ID_project %}" class="btn btn-warning">Удалить</a><br>
+      <a href="{% url 'home' %}" class="btn btn-warning">Назад</a>
+    </div>
+
+{% endblock %}
